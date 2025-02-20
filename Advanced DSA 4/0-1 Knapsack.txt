@@ -1,0 +1,77 @@
+				QUESTION
+Given two integer arrays A and B of size N each which represent values and weights associated with N items respectively.
+Also given an integer C which represents knapsack capacity.
+
+Find out the maximum value subset of A such that sum of the weights of this subset is smaller than or equal to C.
+
+NOTE:	You cannot break an item, either pick the complete item, or don’t pick it (0-1 property).
+
+Problem Constraints:	1 <= N <= 10^3
+			1 <= C <= 10^3
+			1 <= A[i], B[i] <= 10^3
+
+Input Format:
+	-> First argument is an integer array A of size N denoting the values on N items.
+	-> Second argument is an integer array B of size N denoting the weights on N items.
+	-> Third argument is an integer C denoting the knapsack capacity.
+
+Output Format:
+	-> Return a single integer denoting the maximum value subset of A such that sum of the weights of this subset is smaller than or equal to C.
+
+Example Input:
+	Input 1:	A = [60, 100, 120]
+ 			B = [10, 20, 30]
+ 			C = 50
+
+	Input 2:	A = [10, 20, 30, 40]
+ 			B = [12, 13, 15, 19]
+ 			C = 10
+
+Example Output:
+	Output 1:	220
+
+	Output 2:	0
+
+Example Explanation:
+	Explanation 1:	Taking items with weight 20 and 30 will give us the maximum value i.e 100 + 120 = 220
+
+	Explanation 2:	Knapsack capacity is 10 but each item has weight greater than 10 so no items can be considered in the knapsack therefore answer is 0.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+public class Solution 
+{
+    	public int solve(int[] A, int[] B, int C) 
+	{
+        	int N = A.length;
+        	int dp[][] = new int[N][C+1];
+        	for(int i=0;i<N;i++) 
+		{
+            		for(int j=0;j<C+1;j++) 
+			{
+                		dp[i][j] = -1;
+            		}
+        	}
+        	int ans = k01(N-1,C,dp,A,B);
+        	return ans;
+    	}
+    	int k01(int i,int capacity,int dp[][],int A[],int B[]) 
+	{
+        	if(i < 0) 
+		{
+            		return 0;
+        	}
+        	if(dp[i][capacity] != -1) 
+		{
+            		return dp[i][capacity];
+        	}
+        	int dont = k01(i-1,capacity,dp,A,B);
+        	int take = 0;
+        	if(capacity-B[i] >= 0) 	
+		{
+            		take = A[i] + k01(i-1,capacity - B[i],dp,A,B);
+        	}
+        	dp[i][capacity] = Math.max(take,dont);
+        	return Math.max(take,dont);
+    	}
+}
