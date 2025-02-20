@@ -1,0 +1,72 @@
+				QUESTION
+Given an integer array A of size N.
+You are also given an integer B, you need to find whether their exist a subset in A whose sum equal B.
+If there exist a subset then return 1 else return 0.
+
+Note : Sum of elements of an empty subset is 0.
+
+Problem Constraints:	1 <= N <= 17
+			-10^9 <= A[i] <= 10^9
+			-10^9 <= B <= 10^9
+
+Input Format:
+	-> First argument is an integer array A.
+	-> Second argument is an integer B.
+
+Output Format:
+	-> Return 1 if there exist a subset with sum B else return 0.
+
+Example Input:
+	Input 1:	A = [3, 34, -3, 12, 5, 2]
+ 			B = 9
+
+	Input 2:	A = [-8, 34, 4, 0, -5, -2]
+ 			B = -20
+
+Example Output:
+	Output 1:	1
+
+	Output 2:	0
+
+Example Explanation:
+	Explanation 1:	There is a subset (-3, 12) with sum 9.
+	
+	Explanation 2:	There is no subset that add up to -20.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+public class Solution 
+{
+    	ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+    	public int SubsetSum(ArrayList<Integer> A, int B) 
+	{
+        	ArrayList<Integer> curr = new ArrayList<>();
+		generateSub(0,curr,A);
+		for(int i=0;i<ans.size();i++)
+		{
+            		int sum = 0;
+            		for(int j=0;j<ans.get(i).size();j++)
+			{
+                		sum += ans.get(i).get(j);
+            		}
+            		if(sum == B)
+			{
+                		return 1;
+            		}
+        	}
+        	return 0;
+    	}
+	
+    	private void generateSub(int idx,ArrayList<Integer> curr,ArrayList<Integer> A)
+	{
+		if(idx == A.size())
+		{
+			ans.add(new ArrayList<>(curr));
+			return;
+		}
+		curr.add(A.get(idx));
+		generateSub(idx+1,curr,A);
+		curr.remove(curr.size()-1);
+		generateSub(idx+1,curr,A);
+	}
+}
