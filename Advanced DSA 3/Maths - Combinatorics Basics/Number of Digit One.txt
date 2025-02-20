@@ -1,0 +1,65 @@
+				QUESTION
+Given an integer A, find and return the total number of digit 1 appearing in all non-negative integers less than or equal to A.
+
+Problem Constraints:	0 <= A <= 10^9
+
+Input Format:
+	-> The only argument given is the integer A.
+
+Output Format:
+	-> Return the total number of digit 1 appearing in all non-negative integers less than or equal to A.
+
+Example Input:
+	Input 1:	A = 10
+
+	Input 2:	A = 11
+
+Example Output:
+	Output 1:	2
+
+	Output 2:	4
+
+Example Explanation:
+	Explanation 1:	Digit 1 appears in 1 and 10 only and appears one time in each. So the answer is 2.
+
+	Explanation 2:	Digit 1 appears in 1(1 time) , 10(1 time) and 11(2 times) only. So the answer is 4.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+public class Solution 
+{
+    	public int solve(int A) 
+	{
+        	int temp = A;
+        	int n = 0;
+        	while(temp > 0)
+		{
+            		n++;
+            		temp = temp/10;
+        	}
+        	return totalNumDigits(A,n);
+    	}
+    	private int totalNumDigits(int num,int digits)
+	{
+        	if(digits == 0)
+		{
+            		return 0;
+        	}
+        	int dN_1 = (int) Math.pow(10,digits-1);
+        	int dN = (int) Math.pow(10,digits);
+
+        	int a = num / dN;
+        	int b = num % dN;
+        	int ans = a * dN_1;
+	
+        	if(b > (2*dN_1-1))
+		{
+            		ans += dN_1;
+        	}
+        	else if(b > dN_1-1)
+		{
+            		ans += b - dN_1 + 1;
+        	}
+        	return ans + totalNumDigits(num,digits-1);
+    	}
+}
