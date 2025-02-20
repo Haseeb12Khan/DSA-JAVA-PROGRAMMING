@@ -1,0 +1,67 @@
+				QUESTION
+You are given an array B of meeting time intervals where each interval is represented as [start, end] (with start < end). 
+You need to find the minimum number of conference rooms required to host all the meetings.
+
+Problem Constraints:	1 <= B.length <= 10^4
+			0 <= start < end <= 10^6
+
+Input Format:
+	-> The first line contains an integer n, the number of meetings.
+	-> The next n lines each contain two space-separated integers start and end representing the start and end times of the meetings.
+
+Output Format:
+	-> Output a single integer representing the minimum number of conference rooms required.
+
+Example Input:
+	Input 1:	A = 3
+			B = [ [0, 30],
+      			      [5, 10],
+        		      [15, 20] ]
+
+	Input 2:	A = 1
+			B = [ [0, 1] ]
+
+Example Output:
+	Output 1:	2
+
+	Output 2:	1
+
+Example Explanation:
+	Explanation 1:	We need two rooms: 	
+			Room 1: [0, 30] 
+			Room 2: [5, 10], [15, 20]
+
+	Explanation 2:	Since there is only one meeting, we need one room
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+public class Solution 
+{
+    	public int solve(int A, int[][] B) 
+	{
+        	int N = B.length;
+        	int maxTime = 0;
+        	for(int i=0;i<N;i++) 
+		{
+            		maxTime = Math.max(maxTime,B[i][1]);
+        	}
+        	int time[] = new int[maxTime+1];
+        	for(int i=0;i<N;i++) 
+		{
+            		int start = B[i][0];
+            		int end = B[i][1];
+            		time[start] += 1;
+            		time[end] -= 1;
+        	}
+        	for(int i=1;i<maxTime;i++) 
+		{
+            		time[i] += time[i-1];
+        	}
+        	int ans = 0;
+        	for(int i=0;i<maxTime;i++) 
+		{
+            		ans = Math.max(ans,time[i]);
+        	}
+        	return ans;
+    	}
+}
