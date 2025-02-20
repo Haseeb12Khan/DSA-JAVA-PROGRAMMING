@@ -1,0 +1,111 @@
+				QUESTION
+Design and implement a data structure for Least Recently Used (LRU) cache. 
+It should support the following operations: get and set.
+
+1. get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+2. set(key, value) - Set or insert the value if the key is not already present. 
+		     When the cache reaches its capacity, it should invalidate the least recently used item before inserting the new item.
+
+The LRU Cache will be initialized with an integer corresponding to its capacity. 
+Capacity indicates the maximum number of unique keys it can hold at a time.
+
+Definition of "least recently used" : An access to an item is defined as a get or a set operation of the item. 
+				      "Least recently used" item is the one with the oldest access time.
+
+NOTE: If you are using any global variables, make sure to clear them in the constructor.
+
+Example Input : 	capacity = 2
+         	set(1, 10)
+         	set(5, 12)
+         	get(5) --------> returns 12
+         	get(1) --------> returns 10
+         	get(10) -------> returns -1
+         	set(6, 14) ----> this pushes out key = 5 as LRU is full. 
+         	get(5) --------> returns -1 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+class Node
+{
+    	int key;
+    	int val;
+    	Node prev;
+    	Node next;
+    	public Node(int key,int val)
+	{
+        	this.key = key;
+        	this.val = val;
+        	this.prev = null;
+        	this.next = null;
+    	}
+}
+
+public class Solution 
+{
+    	int capacity;
+    	int size;
+    	Node dummyHead;
+    	Node dummyTail;
+    	HashMap<Integer,Node> map;
+    	public Solution(int capacity) 
+	{
+        	this.capacity = capacity;
+        	this.size = 0;
+        	this.dummyHead = new Node(-1,-1);
+        	this.dummyTail = new Node(-1,-1);
+        	this.map = new HashMap<>();
+        	dummyHead.next = dummyTail;
+        	dummyTail.prev = dummyHead;
+    	}
+    	private void remove(Node x)
+	{
+        	x.prev.next = x.next;
+        	x.next.prev = x.prev;
+    	}
+    	private void addLast(Node x)
+	{
+        	Node secondLast = dummyTail.prev;
+        	secondLast.next = x;
+        	x.prev = secondLast;
+        	x.next = dummyTail;
+        	dummyTail.prev = x;
+    	}
+    	public int get(int key) 
+	{
+        	if(map.containsKey(key) == false)
+		{
+            		return -1;
+        	}
+        	Node n = map.get(key);
+        	remove(n);
+        	addLast(n);
+        	return n.val;
+    	}
+    	public void set(int key, int value) 
+	{
+        	if(map.containsKey(key) == true)
+		{
+            		Node n = map.get(key);
+            		n.val = value;
+            		remove(n);
+            		addLast(n);
+            		return;
+        	}
+        	Node x = new Node(key,value);
+        	if(size < capacity)
+		{
+            		addLast(x);
+            		map.put(key,x);
+            		size++;
+        	}
+        	else if(size == capacity)
+		{
+            		Node rm = dummyHead.next;
+            		remove(rm);
+            		int keyToBeDeleted = rm.key;
+            		map.remove(keyToBeDeleted);
+            		addLast(x);
+            		map.put(key,x);
+        	}
+    	}
+}
