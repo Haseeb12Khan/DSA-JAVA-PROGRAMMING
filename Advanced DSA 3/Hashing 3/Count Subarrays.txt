@@ -1,0 +1,55 @@
+				QUESTION
+Misha likes finding all Subarrays of an Array. Now she gives you an array A of N elements and told you to find the number of subarrays of A, that have unique elements.
+
+Since the number of subarrays could be large, return value % 10^9 + 7.
+
+Problem Constraints:	1 <= N <= 10^5
+			1 <= A[i] <= 10^6
+
+Input Format:
+	-> The only argument given is an Array A, having N integers.
+
+Output Format:
+	-> Return the number of subarrays of A, that have unique elements.
+
+Example Input:
+	Input 1:	A = [1, 1, 3]
+
+	Input 2:	A = [2, 1, 2]
+
+Example Output:
+	Output 1:	4
+
+	Output 1:	5
+
+Example Explanation:
+	Explanation 1:	Subarrays of A that have unique elements only:
+ 			[1], [1], [1, 3], [3]
+
+	Explanation 2:	Subarrays of A that have unique elements only:
+ 			[2], [1], [2, 1], [1, 2], [2]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				SOLUTION
+
+public class Solution 
+{
+    	public int solve(ArrayList<Integer> A) 
+	{
+		int n = A.size();
+		long count = 0;
+		int mod = 1000000007;
+		HashSet<Integer> set = new HashSet<>();
+		int left = 0;
+		for(int right=0;right<n;right++)
+		{
+			while(set.contains(A.get(right)))
+			{
+				set.remove(A.get(left));
+				left++;
+			}
+			set.add(A.get(right));
+			count = (count + (right - left + 1)) % mod;
+		}
+		return (int) count;
+	}
+}
